@@ -1,0 +1,293 @@
+<app-navbar></app-navbar>
+
+<div class="relative min-h-screen pt-[74px] flex items-center justify-center overflow-hidden bg-gray-900 pb-12">
+
+  <!-- Background Image with Overlay -->
+  <div class="absolute inset-0 z-0">
+    <img src="https://images.unsplash.com/photo-1542106106-2007e60656a8?q=80&w=1920&auto=format&fit=crop"
+         class="w-full h-full object-cover scale-105 animate-slow-zoom"
+         alt="Moroccan Guide">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-900/70 to-orange-900/50"></div>
+  </div>
+
+  <div class="relative z-10 w-full max-w-2xl px-4 py-12">
+    <!-- Card -->
+    <div class="bg-white/95 backdrop-blur-xl rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 transform transition-all duration-500">
+
+      <!-- Banner / Header -->
+      <div class="bg-gray-900 pt-10 pb-8 px-8 sm:px-12 text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div class="w-16 h-16 bg-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-orange-500/30 rotate-12 hover:rotate-0 transition-transform duration-500">
+          <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">Guide Application</h1>
+        <p class="text-sm font-bold text-gray-400">Apply to become a certified local expert on our platform</p>
+      </div>
+
+      <!-- Form Area -->
+      <div class="p-8 sm:p-12">
+
+        <!-- Success State -->
+        @if (success()) {
+          <div class="text-center py-12 animate-fade-in-up">
+            <div class="w-24 h-24 bg-orange-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner shadow-orange-500/10">
+              <svg class="w-12 h-12 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2 class="text-3xl font-black text-gray-900 mb-3">Application Received!</h2>
+            <p class="text-gray-500 font-semibold mb-6 max-w-sm mx-auto leading-relaxed">Thank you for applying. We’re redirecting you to sign in. Please wait for an admin to approve your guide account.</p>
+            <p class="text-sm font-bold text-orange-500">Redirecting to login…</p>
+          </div>
+        }
+
+        @if (!success()) {
+          @if (serverError()) {
+            <div class="mb-8 flex items-start gap-4 p-5 bg-red-50 border-l-4 border-red-500 rounded-r-2xl text-sm text-red-700 animate-shake shadow-sm">
+              <svg class="w-6 h-6 flex-shrink-0 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <div>
+                <p class="font-black uppercase tracking-widest mb-0.5">Application Error</p>
+                <p class="font-medium opacity-80">{{ serverError() }}</p>
+              </div>
+            </div>
+          }
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8">
+
+            <div class="flex flex-col sm:flex-row items-center gap-8 pb-8 border-b border-gray-100">
+               <div class="relative group">
+                  <div class="w-32 h-32 rounded-[2.5rem] bg-orange-50 border-4 border-white shadow-xl overflow-hidden flex items-center justify-center transition-all group-hover:shadow-orange-500/10 ring-1 ring-gray-100">
+                    @if (previewUrl()) {
+                      <img [src]="previewUrl()" class="w-full h-full object-cover">
+                    } @else {
+                      <svg class="w-12 h-12 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    }
+                    @if (uploadingImg()) {
+                      <div class="absolute inset-0 bg-gray-900/60 flex items-center justify-center backdrop-blur-sm">
+                         <svg class="w-8 h-8 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                         </svg>
+                      </div>
+                    }
+                  </div>
+                  <label class="absolute -bottom-2 -right-2 w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center cursor-pointer shadow-lg hover:bg-orange-600 hover:rotate-12 transition-all border-4 border-white active:scale-90">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <input type="file" accept="image/*" (change)="onPhotoChange($event)" class="hidden" [disabled]="uploadingImg()">
+                  </label>
+               </div>
+
+               <div class="flex-1 text-center sm:text-left">
+                  <h3 class="text-xl font-black text-gray-900 mb-1">Professional Avatar</h3>
+                  <p class="text-sm font-medium text-gray-400 leading-relaxed">Please upload a clear, high-quality portrait photo of yourself. Guides with professional avatars get 40% more bookings.</p>
+                  @if (profileImagePath()) {
+                     <p class="mt-2 text-xs font-bold text-green-600 flex items-center justify-center sm:justify-start gap-1 uppercase tracking-widest">
+                       <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                       Photo Ready
+                     </p>
+                  }
+               </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">First Name</label>
+                <input formControlName="firstName" type="text" placeholder="Ahmed"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all placeholder:text-gray-300 shadow-sm"
+                       [class.border-red-400]="isInvalid('firstName')" [class.bg-red-50]="isInvalid('firstName')">
+                @if (isInvalid('firstName')) {
+                  <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('firstName') }}</p>
+                }
+              </div>
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Last Name</label>
+                <input formControlName="lastName" type="text" placeholder="Benali"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all placeholder:text-gray-300 shadow-sm"
+                       [class.border-red-400]="isInvalid('lastName')" [class.bg-red-50]="isInvalid('lastName')">
+                @if (isInvalid('lastName')) {
+                  <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('lastName') }}</p>
+                }
+              </div>
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Email address</label>
+                <input formControlName="email" type="email" placeholder="guide@example.com"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all placeholder:text-gray-300 shadow-sm"
+                       [class.border-red-400]="isInvalid('email')" [class.bg-red-50]="isInvalid('email')">
+                @if (isInvalid('email')) {
+                  <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('email') }}</p>
+                }
+              </div>
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Secure Password</label>
+                <div class="relative">
+                  <input formControlName="password" [type]="showPassword() ? 'text' : 'password'" placeholder="••••••••"
+                         class="block w-full pl-5 pr-14 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all placeholder:text-gray-300 shadow-sm"
+                         [class.border-red-400]="isInvalid('password')" [class.bg-red-50]="isInvalid('password')">
+                  <button type="button" (click)="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 p-1">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      @if (showPassword()) {
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+                      } @else {
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      }
+                    </svg>
+                  </button>
+                </div>
+                @if (isInvalid('password')) {
+                  <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('password') }}</p>
+                }
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Phone Number <span class="text-orange-500">*</span></label>
+                <input formControlName="phone" type="tel" placeholder="+212 6XX XXX XXX"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all shadow-sm"
+                       [class.border-red-400]="isInvalid('phone')" [class.bg-red-50]="isInvalid('phone')">
+                @if (isInvalid('phone')) { <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('phone') }}</p> }
+              </div>
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Primary City <span class="text-orange-500">*</span></label>
+                <input formControlName="city" type="text" placeholder="Marrakech"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all shadow-sm"
+                       [class.border-red-400]="isInvalid('city')" [class.bg-red-50]="isInvalid('city')">
+                @if (isInvalid('city')) { <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('city') }}</p> }
+              </div>
+              <div>
+                <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Experience (Years) <span class="text-orange-500">*</span></label>
+                <input formControlName="yearsOfExperience" type="number" min="0" max="60" placeholder="e.g. 5"
+                       class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all shadow-sm"
+                       [class.border-red-400]="isInvalid('yearsOfExperience')" [class.bg-red-50]="isInvalid('yearsOfExperience')">
+                @if (isInvalid('yearsOfExperience')) { <p class="mt-2 text-[10px] font-bold text-red-500 tracking-wider uppercase px-1">{{ getError('yearsOfExperience') }}</p> }
+              </div>
+              <div class="sm:col-span-2">
+                <div class="flex items-center justify-between mb-2 px-1">
+                  <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em]">Languages Spoken <span class="text-orange-500">*</span></label>
+                  @if (isInvalid('languageIds')) {
+                    <p class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Select at least one.</p>
+                  }
+                </div>
+
+                @if (languagesLoading()) {
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    @for (_ of [1,2,3,4]; track $index) {
+                      <div class="h-12 rounded-2xl bg-gray-100 animate-pulse"></div>
+                    }
+                  </div>
+                }
+
+                @if (languagesError()) {
+                  <div class="px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-sm text-red-600">
+                    {{ languagesError() }}
+                  </div>
+                }
+
+                @if (!languagesLoading() && !languagesError()) {
+                  @if (languages().length === 0) {
+                    <div class="px-4 py-3 bg-orange-50 border border-orange-200 rounded-2xl text-sm text-orange-700">
+                      No languages available yet. Please contact support or try again later.
+                    </div>
+                  }
+                  @if (languages().length > 0) {
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      @for (lang of languages(); track lang.id) {
+                        <button type="button"
+                                (click)="toggleLanguage(lang.id)"
+                                [class]="isLanguageSelected(lang.id)
+                                  ? 'w-full px-4 py-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-700 font-black text-sm flex items-center justify-between shadow-sm'
+                                  : 'w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-white text-gray-700 font-bold text-sm flex items-center justify-between hover:border-orange-200 transition-all'">
+                          <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full" [class]="isLanguageSelected(lang.id) ? 'bg-orange-500' : 'bg-gray-300'"></span>
+                            {{ lang.name }}
+                          </span>
+                          @if (isLanguageSelected(lang.id)) {
+                            <span class="text-orange-500 font-black text-xs uppercase tracking-wide">Selected</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">Professional Bio</label>
+              <textarea formControlName="bio" rows="4"
+                        placeholder="Share your passion for Morocco. Mention your specialties, favorite spots, and why travelers should choose you..."
+                        class="block w-full px-5 py-4 text-sm font-bold text-gray-900 bg-gray-50 border-2 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 outline-none transition-all placeholder:text-gray-300 resize-none shadow-sm"></textarea>
+            </div>
+
+            <button type="submit" [disabled]="loading() || uploadingImg()"
+                    class="relative w-full py-5 text-sm font-black text-white bg-gray-900 rounded-[1.5rem] group shadow-xl shadow-gray-900/10 hover:bg-orange-500 hover:shadow-orange-500/30 hover:-translate-y-1 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed">
+              <span class="relative z-10 flex items-center justify-center gap-3">
+                @if (loading()) {
+                  <svg class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                  </svg>
+                  Processing Application...
+                } @else {
+                  Submit Final Application
+                  <svg class="w-5 h-5 group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                }
+              </span>
+            </button>
+
+            <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Already have an account? <a routerLink="/login" class="text-orange-500 hover:text-orange-600 no-underline px-1">Sign In</a></p>
+              <a routerLink="/register/tourist" class="text-[10px] font-black text-gray-900 uppercase tracking-widest hover:text-orange-500 transition-colors">Register as Traveler →</a>
+            </div>
+
+          </form>
+        }
+      </div>
+    </div>
+
+    <div class="mt-8 text-center animate-fade-in">
+       <a routerLink="/" class="text-xs font-bold text-white/50 hover:text-white transition-colors uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"></polyline></svg>
+         Return to Homepage
+       </a>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes slow-zoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+.animate-slow-zoom {
+  animation: slow-zoom 20s linear infinite alternate;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+</style>
