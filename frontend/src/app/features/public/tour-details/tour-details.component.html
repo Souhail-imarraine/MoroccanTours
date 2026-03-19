@@ -1,0 +1,280 @@
+<app-navbar></app-navbar>
+
+<div class="bg-[#fcfcfc] min-h-screen">
+
+  @if (loading()) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <div class="animate-pulse">
+      <div class="h-64 sm:h-96 bg-gray-200 rounded-3xl w-full mb-8"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div class="lg:col-span-2 space-y-4">
+          <div class="h-10 bg-gray-200 w-3/4 rounded-xl"></div>
+          <div class="h-4 bg-gray-200 w-1/4 rounded-lg"></div>
+          <div class="space-y-2 mt-8">
+            <div class="h-4 bg-gray-200 w-full rounded-lg"></div>
+            <div class="h-4 bg-gray-200 w-full rounded-lg"></div>
+            <div class="h-4 bg-gray-200 w-5/6 rounded-lg"></div>
+          </div>
+        </div>
+        <div class="h-80 bg-gray-200 rounded-3xl"></div>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (error()) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-24 text-center">
+    <div class="inline-flex w-16 h-16 bg-red-50 rounded-full items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    </div>
+    <h2 class="text-xl font-bold text-gray-900 mb-2">Tour not found</h2>
+    <p class="text-gray-500 mb-6">{{ error() }}</p>
+    <a routerLink="/tours"
+      class="inline-block px-6 py-3 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800">
+      Browse other tours
+    </a>
+  </div>
+  }
+
+  @if (!loading() && tour()) {
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+    <a routerLink="/tours"
+      class="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors mb-6 lg:mb-8">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+      Back to Tours
+    </a>
+
+    <div
+      class="relative h-[300px] sm:h-[400px] lg:h-[500px] w-full rounded-[2rem] overflow-hidden shadow-sm mb-10 group">
+      @if (tour()!.images?.length) {
+      <img [src]="getPhotoUrl(tour()!.images![0].imageUrl)" [alt]="tour()!.title"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+      } @else {
+      <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+        <svg class="w-20 h-20 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+      </div>
+      }
+      <div class="absolute top-6 left-6 flex flex-wrap gap-2">
+        <span class="px-3 py-1.5 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold rounded-lg shadow-sm">
+          {{ tour()!.city }}
+        </span>
+        @if (tour()!.category) {
+        <span class="px-3 py-1.5 bg-orange-500/90 backdrop-blur-sm text-white text-xs font-bold rounded-lg shadow-sm">
+          {{ tour()!.category.name }}
+        </span>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+
+      <div class="lg:col-span-2">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+          {{ tour()!.title }}
+        </h1>
+
+        <div class="flex items-center gap-6 text-sm font-semibold text-gray-600 mb-8 pb-8 border-b border-gray-100">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span>{{ tour()!.durationHours }} hours</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span>{{ tour()!.availableSeats }} / {{ tour()!.maxParticipants }} seats open</span>
+          </div>
+        </div>
+
+        <div class="mb-10">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Tour Overview</h2>
+          <p class="text-gray-600 leading-relaxed whitespace-pre-line text-base">
+            {{ tour()!.description }}
+          </p>
+        </div>
+
+        <div class="bg-blue-50/50 border border-blue-100/50 rounded-3xl p-6 sm:p-8 flex items-center gap-6">
+          <div
+            class="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex flex-shrink-0 items-center justify-center overflow-hidden border-4 border-white shadow-sm">
+            @if (tour()!.guide.profileImage) {
+            <img [src]="getPhotoUrl(tour()!.guide.profileImage)" alt="Guide" class="w-full h-full object-cover">
+            } @else {
+            <span class="text-xl font-bold text-blue-600">{{ tour()!.guide.firstName.charAt(0) || 'G' }}</span>
+            }
+          </div>
+          <div>
+            <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Your Tour Guide</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-1">{{ tour()!.guide.firstName }} {{ tour()!.guide.lastName
+              }}</h3>
+            <p class="text-sm text-gray-500">
+              @if (tour()!.guide.languages) {
+              Speaks <span class="font-semibold text-gray-700">{{ tour()!.guide.languages }}</span>
+              } @else {
+              Expert local guide
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="sticky top-28 bg-white border border-gray-100 shadow-xl shadow-gray-200/50 rounded-3xl p-6 sm:p-8">
+          <div class="flex items-end justify-between mb-8 pb-6 border-b border-gray-100">
+            <div>
+              <p class="text-[11px] font-bold text-gray-400 tracking-widest uppercase mb-1">Price per person</p>
+              <p class="text-3xl font-extrabold text-gray-900 decoration-orange-500 decoration-2 underline-offset-4">
+                {{ tour()!.price | number }} <span
+                  class="text-lg font-semibold text-gray-500 line-through-none">MAD</span>
+              </p>
+            </div>
+          </div>
+
+          @if (bookingOk()) {
+          <div class="text-center py-6">
+            <div
+              class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 scale-100 animate-[pulse_0.5s_ease-out]">
+              <svg class="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-gray-900 mb-2">Adventure Awaits!</h3>
+            <p class="text-sm text-gray-500 mb-8">Your booking request has been successfully sent. The guide will review it shortly.</p>
+
+            <div class="space-y-3">
+               <a routerLink="/tourist/my-bookings"
+                 class="block w-full py-4 bg-orange-500 text-white text-sm font-black rounded-2xl hover:bg-orange-600 shadow-lg shadow-orange-500/20 transition-all no-underline">
+                 Mes Réservations
+               </a>
+               <a routerLink="/"
+                 class="block w-full py-4 bg-gray-50 text-gray-900 text-sm font-black rounded-2xl hover:bg-gray-100 transition-all no-underline">
+                 Back to Home
+               </a>
+            </div>
+          </div>
+          } @else {
+            @if (bookingError()) {
+              <div class="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-[13px] font-bold text-red-600 flex items-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {{ bookingError() }}
+              </div>
+            }
+
+            @if (!isGuest() && !isTourist()) {
+              <div class="mb-6 px-5 py-4 bg-amber-50 border border-amber-200 rounded-[1.5rem] flex items-start gap-3 shadow-sm shadow-amber-500/5 transition-all animate-in fade-in zoom-in-95 duration-500">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center flex-shrink-0 animate-pulse">
+                  <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs font-black text-amber-900 uppercase tracking-wider mb-1">Tourist Role Required</p>
+                  <p class="text-[11px] font-bold text-amber-700 leading-relaxed italic uppercase tracking-tight">
+                    Booking is exclusive to tourists. You are logged in as a <span class="text-amber-900 font-extrabold">{{ authService.currentUser()?.role }}</span>.
+                  </p>
+                </div>
+              </div>
+            }
+
+            @if (tour()!.availableSeats === 0) {
+              <div class="px-6 py-8 bg-gray-50 border border-gray-200 rounded-[2rem] text-center mb-6">
+                <p class="text-base font-black text-gray-800">Fully Booked</p>
+                <p class="text-xs text-gray-500 mt-2 font-medium">Sorry, no more seats available for this experience.</p>
+              </div>
+            } @else {
+
+              @if (bookingStep() === 1) {
+                <div class="mb-8">
+                  <div class="flex items-center justify-between mb-4">
+                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Select Participants</label>
+                     <span class="text-[10px] font-black text-orange-500 bg-orange-50 px-2 py-0.5 rounded-md">Step 1 of 2</span>
+                  </div>
+                  <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-2xl border border-gray-100/50">
+                    <button (click)="decrement()" [disabled]="participants() <= 1"
+                      class="w-11 h-11 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-800 hover:text-orange-500 disabled:opacity-30 transition-all">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <span class="text-xl font-black text-gray-900">{{ participants() }}</span>
+                    <button (click)="increment()" [disabled]="participants() >= tour()!.availableSeats"
+                      class="w-11 h-11 rounded-xl bg-white shadow-sm flex items-center justify-center text-gray-800 hover:text-orange-500 disabled:opacity-30 transition-all">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-8 px-5 py-4 bg-orange-50 rounded-2xl border border-orange-100/50">
+                  <span class="text-sm font-black text-gray-600">Total Price</span>
+                  <span class="text-xl font-black text-orange-600">{{ tour()!.price * participants() | number }} MAD</span>
+                </div>
+
+                <button (click)="nextStep()" [disabled]="!isGuest() && !isTourist()"
+                  class="w-full py-4 text-sm font-black text-white bg-gray-900 rounded-2xl hover:bg-orange-500 shadow-xl shadow-gray-900/10 hover:shadow-orange-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-30 disabled:hover:bg-gray-900 disabled:cursor-not-allowed">
+                  Continue Booking
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              }
+
+              <!-- STEP 2: CONTACT INFO -->
+              @if (bookingStep() === 2) {
+                <div class="mb-8 animate-in fade-in slide-in-from-right-4 duration-300">
+                  <div class="flex items-center justify-between mb-6">
+                     <button (click)="prevStep()" class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-1 hover:text-gray-900 transition-colors">
+                        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg> Back
+                     </button>
+                     <span class="text-[10px] font-black text-orange-500 bg-orange-50 px-2 py-0.5 rounded-md">Step 2 of 2</span>
+                  </div>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                      <input type="email" [(ngModel)]="contactEmail" name="email" placeholder="you@example.com"
+                             class="w-full px-5 py-3.5 bg-gray-50 border border-transparent rounded-2xl text-sm font-bold text-gray-900 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all">
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Phone Number</label>
+                      <input type="tel" [(ngModel)]="contactPhone" name="phone" placeholder="+212 600 000 000"
+                             class="w-full px-5 py-3.5 bg-gray-50 border border-transparent rounded-2xl text-sm font-bold text-gray-900 focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all">
+                    </div>
+                  </div>
+                </div>
+
+                <button (click)="bookTour()" [disabled]="booking() || !isTourist() || !contactEmail() || !contactPhone()"
+                  class="w-full py-4 text-sm font-black text-white bg-orange-500 rounded-2xl hover:bg-orange-600 shadow-xl shadow-orange-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                  @if (booking()) {
+                    <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                    Confirming...
+                  } @else {
+                    Confirm Reservation
+                  }
+                </button>
+              }
+
+              <p class="text-[10px] text-center text-gray-400 font-bold mt-4 uppercase tracking-[0.1em]">
+                Secure & Trusted Reservation
+              </p>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @}
+</div>
