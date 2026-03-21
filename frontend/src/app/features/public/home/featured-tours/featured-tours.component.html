@@ -1,0 +1,211 @@
+<!-- CATEGORIES -->
+<section class="py-24 bg-gray-50/50">
+  <div class="max-w-[1180px] mx-auto px-6">
+
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Explore by Category</h2>
+      <p class="text-lg text-gray-500 font-medium">Find the perfect experience tailored just for you</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      @for (cat of categories(); track cat.id; let i = $index) {
+      <div class="group flex flex-col items-center text-center px-6 py-8 bg-white rounded-3xl
+                    border border-gray-100 cursor-pointer shadow-sm hover:border-orange-500/30 
+                    hover:shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2
+                    transition-all duration-300" (click)="filterByCategory(cat.id)">
+
+        <div
+          class="w-14 h-14 mb-5 text-gray-400 group-hover:text-orange-500 group-hover:scale-110 transition-all duration-300">
+          @if (i % 6 === 0) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path
+              d="M12 3v1m0 16v1m8.66-13.5l-.87.5M4.21 16.5l-.87.5M20.66 16.5l-.87-.5M4.21 7.5l-.87-.5M21 12h-1M4 12H3" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+          } @else if (i % 6 === 1) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15" />
+            <path d="M9 9h1M9 13h1M9 17h1M16 10h1M16 14h1" />
+          </svg>
+          } @else if (i % 6 === 2) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path d="m8 3 4 8 5-5 5 16H2L8 3z" />
+          </svg>
+          } @else if (i % 6 === 3) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path d="M17 21H3s2-4 4-4 3 2 5 2 4-4 4-4" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          } @else if (i % 6 === 4) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+          } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-full h-full">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+            <path d="M2 8h16v9a4 4 0 0 1-4-4H6a4 4 0 0 1-4-4V8z" />
+            <line x1="6" y1="1" x2="6" y2="4" />
+            <line x1="10" y1="1" x2="10" y2="4" />
+            <line x1="14" y1="1" x2="14" y2="4" />
+          </svg>
+          }
+        </div>
+
+        <span class="text-sm font-extrabold text-gray-900 mb-2">{{ cat.name }}</span>
+        <span class="text-xs font-medium text-gray-500 leading-relaxed">{{ cat.description }}</span>
+      </div>
+      }
+
+      @if (categories().length === 0) {
+      @for (n of [1,2,3,4,5,6]; track n) {
+      <div
+        class="flex flex-col items-center text-center px-4 py-8 bg-white rounded-3xl border border-gray-100 animate-pulse">
+        <div class="w-12 h-12 bg-gray-100 rounded-full mb-5"></div>
+        <div class="h-4 w-20 bg-gray-200 rounded mb-3"></div>
+        <div class="h-3 w-14 bg-gray-100 rounded"></div>
+      </div>
+      }
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-24 bg-white">
+  <div class="max-w-[1180px] mx-auto px-6">
+
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Top Destinations</h2>
+    </div>
+
+    <div class="grid gap-6 auto-rows-[250px] sm:auto-rows-[300px]"
+      style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      @for (dest of destinations; track dest.name; let i = $index) {
+      <div
+        class="group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-500"
+        [ngClass]="{'md:col-span-2 md:row-span-2': i === 0, 'md:col-span-2': i === 1}"
+        (click)="filterByCity(dest.name)">
+        <img [src]="dest.image" [alt]="dest.name"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+        <div
+          class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">{{ dest.name }}</h3>
+          <p class="text-sm font-medium text-white/80 uppercase tracking-widest">{{ dest.tagline }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-24 bg-gray-900 text-white relative overflow-hidden">
+  <div class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 rounded-full bg-orange-500/10 blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 rounded-full bg-orange-500/10 blur-3xl"></div>
+
+  <div class="max-w-[1180px] mx-auto px-6 relative z-10">
+
+    <div class="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">Unforgettable Experiences</h2>
+        <p class="text-lg text-gray-400 font-medium">Newly added handpicked tours and activities across Morocco</p>
+      </div>
+      <a routerLink="/tours"
+        class="inline-flex items-center justify-center px-8 py-3.5 text-sm font-bold text-gray-900 bg-white rounded-2xl hover:bg-orange-500 hover:text-white transition-all shadow-lg hover:shadow-orange-500/25 whitespace-nowrap">
+        View All Tours
+      </a>
+    </div>
+
+    <!-- Tours Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      @for (tour of latestTours(); track tour.id) {
+      <a [routerLink]="['/tours', tour.id]"
+        class="group bg-gray-800/50 backdrop-blur-sm rounded-[2rem] overflow-hidden border border-white/10 flex flex-col hover:border-orange-500/50 hover:bg-gray-800 hover:-translate-y-2 transition-all duration-300 shadow-xl relative">
+
+        <div class="relative h-52 w-full overflow-hidden bg-gray-900">
+          @if (tour.images && tour.images.length > 0) {
+          <img [src]="getPhotoUrl(tour.images[0].imageUrl)" [alt]="tour.title"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100">
+          } @else {
+          <img
+            src="https://images.unsplash.com/photo-1539020140153-e479b8c22e70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            [alt]="tour.title"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100">
+          }
+          <div class="absolute top-4 left-4">
+            <span
+              class="inline-flex items-center px-3 py-1.5 rounded-xl text-[10px] uppercase tracking-widest font-extrabold bg-white/10 backdrop-blur-md text-white border border-white/20">
+              {{ tour.category.name || 'General' }}
+            </span>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-100"></div>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 flex flex-col flex-grow">
+          <h3
+            class="text-lg font-extrabold text-white leading-snug mb-3 line-clamp-2 group-hover:text-orange-400 transition-colors">
+            {{ tour.title }}
+          </h3>
+
+          <div class="flex flex-wrap items-center gap-4 mb-5">
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-400">
+              <svg class="w-3.5 h-3.5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              {{ tour.durationHours }} hrs
+            </span>
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-400">
+              <svg class="w-3.5 h-3.5 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.5">
+                <circle cx="12" cy="10" r="3" />
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              </svg>
+              {{ tour.city }}
+            </span>
+          </div>
+
+          <!-- Footer -->
+          <div class="flex items-end justify-between pt-5 mt-auto border-t border-white/10">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 font-bold text-xs uppercase overflow-hidden border border-orange-500/30">
+                @if (tour.guide.profileImage) {
+                <img [src]="getPhotoUrl(tour.guide.profileImage)" class="w-full h-full object-cover">
+                } @else {
+                {{ tour.guide.firstName.charAt(0) }}
+                }
+              </div>
+              <div>
+                <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest leading-none mb-1">Guide</p>
+                <p class="text-xs font-bold text-gray-300 leading-none">{{ tour.guide.firstName }}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest leading-none mb-1">Price</p>
+              <p class="text-lg font-extrabold text-white leading-none">{{ tour.price }} <span
+                  class="text-[10px] text-orange-400">MAD</span></p>
+            </div>
+          </div>
+        </div>
+      </a>
+      }
+
+      @if (latestTours().length === 0) {
+      @for (n of [1,2,3,4]; track n) {
+      <div class="bg-gray-800/30 rounded-[2rem] overflow-hidden border border-white/5 animate-pulse">
+        <div class="h-52 bg-gray-800"></div>
+        <div class="p-6">
+          <div class="h-4 bg-gray-700/50 rounded-md w-3/4 mb-4"></div>
+          <div class="h-3 bg-gray-800 rounded-md w-1/2 mb-6"></div>
+          <div class="h-10 bg-gray-800 rounded-xl w-full"></div>
+        </div>
+      </div>
+      }
+      }
+    </div>
+  </div>
+</section>
